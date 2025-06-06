@@ -7,7 +7,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from mcp_things3.handlers import AppleScriptHandler, XCallbackHandler
+from things3_mcp.handlers import AppleScriptHandler, XCallbackHandler
 
 
 class TestAppleScriptHandler:
@@ -16,7 +16,7 @@ class TestAppleScriptHandler:
     def test_init_default_path(self):
         """Test handler initialization with default script path."""
         handler = AppleScriptHandler()
-        expected_path = Path(__file__).parent.parent / "src" / "mcp_things3" / "scripts"
+        expected_path = Path(__file__).parent.parent / "src" / "things3_mcp" / "scripts"
         assert str(handler.scripts_path).endswith("scripts")
     
     def test_init_custom_path(self):

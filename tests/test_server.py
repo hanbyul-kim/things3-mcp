@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, Mock, patch
 import pytest
 import mcp.types as types
 
-from mcp_things3.server import Things3Server
+from things3_mcp.server import Things3Server
 
 
 class TestThings3Server:
@@ -26,9 +26,9 @@ class TestThings3Server:
         Things3Server()
         mock_setup.assert_called_once()
     
-    @patch('mcp_things3.server.CreateTools')
-    @patch('mcp_things3.server.ViewTools')
-    @patch('mcp_things3.server.ManageTools')
+    @patch('things3_mcp.server.CreateTools')
+    @patch('things3_mcp.server.ViewTools')
+    @patch('things3_mcp.server.ManageTools')
     def test_setup_handlers_integration(self, mock_manage, mock_view, mock_create):
         """Test handler setup integration."""
         # Mock tool definitions

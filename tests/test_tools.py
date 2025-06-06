@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, Mock, patch
 import pytest
 import mcp.types as types
 
-from mcp_things3.tools import CreateTools, ManageTools, ViewTools
+from things3_mcp.tools import CreateTools, ManageTools, ViewTools
 
 
 class TestCreateTools:
