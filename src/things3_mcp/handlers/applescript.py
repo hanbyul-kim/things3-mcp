@@ -78,13 +78,6 @@ class AppleScriptHandler:
         try:
             with open(script_path, 'r', encoding='utf-8') as f:
                 script = f.read()
-            
-            # Load utility functions if they exist
-            utils_path = self.scripts_path / "utils.applescript"
-            if utils_path.exists():
-                with open(utils_path, 'r', encoding='utf-8') as f:
-                    utils_script = f.read()
-                script = utils_script + "\n\n" + script
                 
             return self.run_script(script)
         except IOError as e:
