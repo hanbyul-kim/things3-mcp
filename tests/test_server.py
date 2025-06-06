@@ -15,7 +15,7 @@ class TestThings3Server:
         """Test server initialization."""
         server = Things3Server()
         
-        assert server.server.name == "things3-enhanced"
+        assert server.server.name == "things3-mcp"
         assert server.create_tools is not None
         assert server.view_tools is not None
         assert server.manage_tools is not None
