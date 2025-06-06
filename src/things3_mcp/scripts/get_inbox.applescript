@@ -65,10 +65,10 @@ tell application "Things3"
             end if
         end try
         
-        set tasksJSON to tasksJSON & "{\"title\": \"" & taskTitle & "\"," & ¡þ
-            "\"notes\": \"" & taskNotes & "\"," & ¡þ
-            "\"due_date\": \"" & dueDate & "\"," & ¡þ
-            "\"when\": \"" & whenDate & "\"," & ¡þ
+        set tasksJSON to tasksJSON & "{\"title\": \"" & taskTitle & "\"," & Â¬
+            "\"notes\": \"" & taskNotes & "\"," & Â¬
+            "\"due_date\": \"" & dueDate & "\"," & Â¬
+            "\"when\": \"" & whenDate & "\"," & Â¬
             "\"tags\": \"" & tagText & "\"}"
         
         if i is not taskCount then

@@ -28,7 +28,6 @@ class XCallbackHandler:
                 ['open', url],
                 check=True,
                 capture_output=True,
-                text=True,
                 timeout=10
             )
             logger.debug(f"X-callback URL executed successfully: {url}")
@@ -37,8 +36,9 @@ class XCallbackHandler:
             logger.error("'open' command not found - this requires macOS")
             raise RuntimeError("X-callback-url execution requires macOS")
         except subprocess.CalledProcessError as e:
-            logger.error(f"Failed to execute x-callback-url: {e.stderr}")
-            raise RuntimeError(f"X-callback-url execution failed: {e.stderr}")
+            stderr = e.stderr.decode('utf-8', errors='replace') if e.stderr else 'Unknown error'
+            logger.error(f"Failed to execute x-callback-url: {stderr}")
+            raise RuntimeError(f"X-callback-url execution failed: {stderr}")
         except subprocess.TimeoutExpired:
             logger.error("X-callback-url execution timed out")
             raise RuntimeError("X-callback-url execution timed out")

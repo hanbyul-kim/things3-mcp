@@ -41,15 +41,15 @@ class AppleScriptHandler:
                 ['osascript', '-e', script],
                 check=True,
                 capture_output=True,
-                text=True,
                 timeout=30
             )
-            output = result.stdout.strip()
+            output = result.stdout.decode('utf-8', errors='replace').strip()
             logger.debug(f"AppleScript executed successfully, output length: {len(output)}")
             return output
         except subprocess.CalledProcessError as e:
-            logger.error(f"AppleScript execution failed: {e.stderr}")
-            raise RuntimeError(f"AppleScript execution failed: {e.stderr}")
+            stderr = e.stderr.decode('utf-8', errors='replace') if e.stderr else 'Unknown error'
+            logger.error(f"AppleScript execution failed: {stderr}")
+            raise RuntimeError(f"AppleScript execution failed: {stderr}")
         except subprocess.TimeoutExpired:
             logger.error("AppleScript execution timed out")
             raise RuntimeError("AppleScript execution timed out")
