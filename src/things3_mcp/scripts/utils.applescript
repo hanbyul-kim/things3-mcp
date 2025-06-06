@@ -26,7 +26,16 @@ end jsonEscape
 
 on safeGetValue(theObject, theProperty, defaultValue)
     try
-        set theValue to theProperty of theObject
+        if theProperty is "notes" then
+            set theValue to notes of theObject
+        else if theProperty is "due date" then
+            set theValue to due date of theObject
+        else if theProperty is "activation date" then
+            set theValue to activation date of theObject
+        else
+            return defaultValue
+        end if
+        
         if theValue is missing value then
             return defaultValue
         else
