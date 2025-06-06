@@ -22,11 +22,14 @@ dev = [
 ]
 
 [project.scripts]
-things3-mcp = "mcp_things3.server:main"
+things3-mcp = "things3_mcp.server:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/things3_mcp"]
 
 [tool.black]
 line-length = 88

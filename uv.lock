@@ -200,38 +200,6 @@ wheels = [
 ]
 
 [[package]]
-name = "mcp-things3-enhanced"
-version = "1.0.0"
-source = { editable = "." }
-dependencies = [
-    { name = "loguru" },
-    { name = "mcp" },
-    { name = "typing-extensions" },
-]
-
-[package.optional-dependencies]
-dev = [
-    { name = "black" },
-    { name = "mypy" },
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
-    { name = "ruff" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "black", marker = "extra == 'dev'", specifier = ">=23.0.0" },
-    { name = "loguru", specifier = ">=0.7.0" },
-    { name = "mcp", specifier = ">=1.6.0" },
-    { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.0.0" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0.0" },
-    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.21.0" },
-    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.1.0" },
-    { name = "typing-extensions", specifier = ">=4.8.0" },
-]
-provides-extras = ["dev"]
-
-[[package]]
 name = "mypy"
 version = "1.16.0"
 source = { registry = "https://pypi.org/simple" }
@@ -545,6 +513,38 @@ sdist = { url = "https://files.pythonhosted.org/packages/8b/d0/0332bd8a25779a0e2
 wheels = [
     { url = "https://files.pythonhosted.org/packages/e3/81/c60b35fe9674f63b38a8feafc414fca0da378a9dbd5fa1e0b8d23fcc7a9b/starlette-0.47.0-py3-none-any.whl", hash = "sha256:9d052d4933683af40ffd47c7465433570b4949dc937e20ad1d73b34e72f10c37", size = 72796 },
 ]
+
+[[package]]
+name = "things3-mcp"
+version = "1.0.0"
+source = { editable = "." }
+dependencies = [
+    { name = "loguru" },
+    { name = "mcp" },
+    { name = "typing-extensions" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "black" },
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "black", marker = "extra == 'dev'", specifier = ">=23.0.0" },
+    { name = "loguru", specifier = ">=0.7.0" },
+    { name = "mcp", specifier = ">=1.6.0" },
+    { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.0.0" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0.0" },
+    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.21.0" },
+    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.1.0" },
+    { name = "typing-extensions", specifier = ">=4.8.0" },
+]
+provides-extras = ["dev"]
 
 [[package]]
 name = "tomli"
