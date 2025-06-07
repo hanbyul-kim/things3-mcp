@@ -230,3 +230,23 @@ class AppleScriptHandler:
         except RuntimeError as e:
             logger.error(f"Failed to set tags: {e}")
             return False
+
+    def complete_selected_todos(self) -> Dict[str, Any]:
+        """Complete all currently selected todos in Things3.
+        
+        Returns:
+            Dictionary with success status and completion details
+        """
+        try:
+            result = self.run_script_file("complete_selected")
+            response = json.loads(result) if result else {"success": False, "message": "No response"}
+            
+            if response.get("success"):
+                logger.info(f"Successfully completed selected todos: {response.get('message')}")
+            else:
+                logger.warning(f"Failed to complete selected todos: {response.get('message')}")
+                
+            return response
+        except (json.JSONDecodeError, RuntimeError) as e:
+            logger.error(f"Failed to complete selected todos: {e}")
+            return {"success": False, "error": str(e)}

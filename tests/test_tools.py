@@ -182,12 +182,13 @@ class TestManageTools:
         tools = ManageTools()
         definitions = tools.get_tool_definitions()
         
-        assert len(definitions) == 3
+        assert len(definitions) == 4
         
         tool_names = [tool.name for tool in definitions]
         assert "assign-project" in tool_names
         assert "assign-area" in tool_names
         assert "set-tags" in tool_names
+        assert "complete-selected" in tool_names
     
     @patch.object(ManageTools, '__init__', lambda x: setattr(x, 'applescript', Mock()))
     async def test_handle_assign_project_success(self):
@@ -233,3 +234,50 @@ class TestManageTools:
         assert "Successfully set tags [tag1, tag2] for task 'Test Task'" in result[0].text
         
         tools.applescript.set_tags.assert_called_once_with("Test Task", ["tag1", "tag2"])
+    
+    @patch.object(ManageTools, '__init__', lambda x: setattr(x, 'applescript', Mock()))
+    async def test_handle_complete_selected_success(self):
+        """Test successful completion of selected todos."""
+        tools = ManageTools()
+        tools.applescript.complete_selected_todos.return_value = {
+            "success": True,
+            "completed_count": 3,
+            "message": "Completed 3 of 3 selected todos"
+        }
+        
+        result = await tools.handle_complete_selected({})
+        
+        assert len(result) == 1
+        assert isinstance(result[0], types.TextContent)
+        assert "Completed 3 of 3 selected todos" in result[0].text
+        
+        tools.applescript.complete_selected_todos.assert_called_once()
+    
+    @patch.object(ManageTools, '__init__', lambda x: setattr(x, 'applescript', Mock()))
+    async def test_handle_complete_selected_failure(self):
+        """Test failure in completing selected todos."""
+        tools = ManageTools()
+        tools.applescript.complete_selected_todos.return_value = {
+            "success": False,
+            "message": "No todos selected"
+        }
+        
+        result = await tools.handle_complete_selected({})
+        
+        assert len(result) == 1
+        assert isinstance(result[0], types.TextContent)
+        assert "Failed to complete selected todos: No todos selected" in result[0].text
+        
+        tools.applescript.complete_selected_todos.assert_called_once()
+    
+    @patch.object(ManageTools, '__init__', lambda x: setattr(x, 'applescript', Mock()))
+    async def test_handle_complete_selected_error(self):
+        """Test error handling in completing selected todos."""
+        tools = ManageTools()
+        tools.applescript.complete_selected_todos.side_effect = Exception("AppleScript error")
+        
+        result = await tools.handle_complete_selected({})
+        
+        assert len(result) == 1
+        assert isinstance(result[0], types.TextContent)
+        assert "Error completing selected todos: AppleScript error" in result[0].text

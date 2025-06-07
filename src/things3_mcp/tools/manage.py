@@ -57,6 +57,15 @@ class ManageTools:
                     "additionalProperties": False
                 },
             ),
+            types.Tool(
+                name="complete-selected",
+                description="Complete all currently selected todos in Things3",
+                inputSchema={
+                    "type": "object",
+                    "properties": {},
+                    "additionalProperties": False
+                },
+            ),
         ]
     
     async def handle_assign_project(self, arguments: Dict[str, Any]) -> List[types.TextContent]:
@@ -123,5 +132,25 @@ class ManageTools:
                 
         except Exception as e:
             message = f"Error setting tags: {str(e)}"
+            logger.error(message)
+            return [types.TextContent(type="text", text=message)]
+    
+    async def handle_complete_selected(self, arguments: Dict[str, Any]) -> List[types.TextContent]:
+        """Handle complete selected todos request."""
+        try:
+            result = self.applescript.complete_selected_todos()
+            
+            if result.get("success"):
+                message = result.get("message", "Successfully completed selected todos")
+                logger.info(message)
+                return [types.TextContent(type="text", text=message)]
+            else:
+                error_msg = result.get("error") or result.get("message", "Unknown error")
+                message = f"Failed to complete selected todos: {error_msg}"
+                logger.error(message)
+                return [types.TextContent(type="text", text=message)]
+                
+        except Exception as e:
+            message = f"Error completing selected todos: {str(e)}"
             logger.error(message)
             return [types.TextContent(type="text", text=message)]
