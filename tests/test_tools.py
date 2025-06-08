@@ -184,13 +184,14 @@ class TestManageTools:
         tools = ManageTools()
         definitions = tools.get_tool_definitions()
         
-        assert len(definitions) == 4
+        assert len(definitions) == 5
         
         tool_names = [tool.name for tool in definitions]
         assert "assign-project" in tool_names
         assert "assign-area" in tool_names
         assert "set-tags" in tool_names
         assert "complete-selected" in tool_names
+        assert "rename-task" in tool_names
     
     @patch.object(ManageTools, '__init__', lambda x: setattr(x, 'applescript', Mock()))
     async def test_handle_assign_project_success(self):
@@ -283,3 +284,46 @@ class TestManageTools:
         assert len(result) == 1
         assert isinstance(result[0], types.TextContent)
         assert "Error completing selected todos: AppleScript error" in result[0].text
+    
+    @patch.object(ManageTools, '__init__', lambda x: setattr(x, 'applescript', Mock()))
+    async def test_handle_rename_task_success(self):
+        """Test successful task renaming."""
+        tools = ManageTools()
+        tools.applescript.rename_task.return_value = True
+        
+        arguments = {"old_name": "Old Task Name", "new_name": "New Task Name"}
+        result = await tools.handle_rename_task(arguments)
+        
+        assert len(result) == 1
+        assert isinstance(result[0], types.TextContent)
+        assert "Successfully renamed task from 'Old Task Name' to 'New Task Name'" in result[0].text
+        
+        tools.applescript.rename_task.assert_called_once_with("Old Task Name", "New Task Name")
+    
+    @patch.object(ManageTools, '__init__', lambda x: setattr(x, 'applescript', Mock()))
+    async def test_handle_rename_task_not_found(self):
+        """Test renaming when task is not found."""
+        tools = ManageTools()
+        tools.applescript.rename_task.return_value = False
+        
+        arguments = {"old_name": "Nonexistent Task", "new_name": "New Name"}
+        result = await tools.handle_rename_task(arguments)
+        
+        assert len(result) == 1
+        assert isinstance(result[0], types.TextContent)
+        assert "Failed to rename task: Task 'Nonexistent Task' not found" in result[0].text
+        
+        tools.applescript.rename_task.assert_called_once_with("Nonexistent Task", "New Name")
+    
+    @patch.object(ManageTools, '__init__', lambda x: setattr(x, 'applescript', Mock()))
+    async def test_handle_rename_task_error(self):
+        """Test error handling in task renaming."""
+        tools = ManageTools()
+        tools.applescript.rename_task.side_effect = Exception("AppleScript error")
+        
+        arguments = {"old_name": "Task Name", "new_name": "New Name"}
+        result = await tools.handle_rename_task(arguments)
+        
+        assert len(result) == 1
+        assert isinstance(result[0], types.TextContent)
+        assert "Error renaming task: AppleScript error" in result[0].text
