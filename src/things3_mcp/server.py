@@ -104,6 +104,8 @@ class Things3Server:
                     return await self.manage_tools.handle_set_tags(arguments)
                 elif name == "complete-selected":
                     return await self.manage_tools.handle_complete_selected(arguments)
+                elif name == "rename-task":
+                    return await self.manage_tools.handle_rename_task(arguments)
                 
                 else:
                     raise ValueError(f"Unknown tool: {name}")
