@@ -84,6 +84,10 @@ class Things3Server:
                     return await self.view_tools.handle_view_inbox(arguments)
                 elif name == "view-today":
                     return await self.view_tools.handle_view_today(arguments)
+                elif name == "view-anytime":
+                    return await self.view_tools.handle_view_anytime(arguments)
+                elif name == "view-someday":
+                    return await self.view_tools.handle_view_someday(arguments)
                 elif name == "view-projects":
                     return await self.view_tools.handle_view_projects(arguments)
                 elif name == "view-areas":
