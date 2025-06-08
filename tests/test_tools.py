@@ -102,11 +102,13 @@ class TestViewTools:
         tools = ViewTools()
         definitions = tools.get_tool_definitions()
         
-        assert len(definitions) == 5
+        assert len(definitions) == 7
         
         tool_names = [tool.name for tool in definitions]
         assert "view-inbox" in tool_names
         assert "view-today" in tool_names
+        assert "view-anytime" in tool_names
+        assert "view-someday" in tool_names
         assert "view-projects" in tool_names
         assert "view-areas" in tool_names
         assert "get-selected-todos" in tool_names
@@ -115,7 +117,7 @@ class TestViewTools:
     async def test_handle_view_inbox_with_tasks(self):
         """Test inbox viewing with tasks."""
         tools = ViewTools()
-        tools.applescript.get_inbox_tasks.return_value = [
+        tools.applescript.get_list_tasks.return_value = [
             {"title": "Task 1", "due_date": "2024-01-01", "when": "2024-01-01", "notes": "Notes 1"},
             {"title": "Task 2", "due_date": "", "when": "", "notes": ""}
         ]
@@ -132,7 +134,7 @@ class TestViewTools:
     async def test_handle_view_inbox_empty(self):
         """Test inbox viewing with no tasks."""
         tools = ViewTools()
-        tools.applescript.get_inbox_tasks.return_value = []
+        tools.applescript.get_list_tasks.return_value = []
         
         result = await tools.handle_view_inbox({})
         
