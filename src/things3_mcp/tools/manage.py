@@ -66,6 +66,19 @@ class ManageTools:
                     "additionalProperties": False
                 },
             ),
+            types.Tool(
+                name="rename-task",
+                description="Rename a task in Things3",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "old_name": {"type": "string", "description": "Current name of the task"},
+                        "new_name": {"type": "string", "description": "New name for the task"},
+                    },
+                    "required": ["old_name", "new_name"],
+                    "additionalProperties": False
+                },
+            ),
         ]
     
     async def handle_assign_project(self, arguments: Dict[str, Any]) -> List[types.TextContent]:
@@ -152,5 +165,27 @@ class ManageTools:
                 
         except Exception as e:
             message = f"Error completing selected todos: {str(e)}"
+            logger.error(message)
+            return [types.TextContent(type="text", text=message)]
+    
+    async def handle_rename_task(self, arguments: Dict[str, Any]) -> List[types.TextContent]:
+        """Handle task renaming request."""
+        old_name = arguments["old_name"]
+        new_name = arguments["new_name"]
+        
+        try:
+            success = self.applescript.rename_task(old_name, new_name)
+            
+            if success:
+                message = f"Successfully renamed task from '{old_name}' to '{new_name}'"
+                logger.info(message)
+                return [types.TextContent(type="text", text=message)]
+            else:
+                message = f"Failed to rename task: Task '{old_name}' not found"
+                logger.error(message)
+                return [types.TextContent(type="text", text=message)]
+                
+        except Exception as e:
+            message = f"Error renaming task: {str(e)}"
             logger.error(message)
             return [types.TextContent(type="text", text=message)]
