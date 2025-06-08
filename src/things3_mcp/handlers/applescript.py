@@ -84,18 +84,42 @@ class AppleScriptHandler:
             logger.error(f"Failed to read script file {script_path}: {e}")
             raise RuntimeError(f"Failed to read script file: {e}")
 
+    def get_list_tasks(self, list_name: str) -> List[Dict[str, Any]]:
+        """Retrieve tasks from a specific Things3 list using the appropriate script.
+        
+        Args:
+            list_name: Name of the Things3 list (e.g., "Inbox", "Today", "Anytime", "Someday")
+            
+        Returns:
+            List of task dictionaries
+        """
+        # Map list names to script files
+        list_to_script = {
+            "Inbox": "get_inbox",
+            "Today": "get_today", 
+            "Anytime": "get_anytime",
+            "Someday": "get_someday"
+        }
+        
+        script_name = list_to_script.get(list_name)
+        if not script_name:
+            logger.error(f"Unsupported list name: {list_name}")
+            return []
+        
+        try:
+            result = self.run_script_file(script_name)
+            return json.loads(result) if result else []
+        except (json.JSONDecodeError, RuntimeError) as e:
+            logger.error(f"Failed to get tasks from list '{list_name}': {e}")
+            return []
+
     def get_inbox_tasks(self) -> List[Dict[str, Any]]:
         """Retrieve tasks from the Things3 inbox.
         
         Returns:
             List of task dictionaries
         """
-        try:
-            result = self.run_script_file("get_inbox")
-            return json.loads(result) if result else []
-        except (json.JSONDecodeError, RuntimeError) as e:
-            logger.error(f"Failed to get inbox tasks: {e}")
-            return []
+        return self.get_list_tasks("Inbox")
 
     def get_today_tasks(self) -> List[Dict[str, Any]]:
         """Retrieve today's tasks from Things3.
@@ -103,12 +127,7 @@ class AppleScriptHandler:
         Returns:
             List of task dictionaries
         """
-        try:
-            result = self.run_script_file("get_today")
-            return json.loads(result) if result else []
-        except (json.JSONDecodeError, RuntimeError) as e:
-            logger.error(f"Failed to get today's tasks: {e}")
-            return []
+        return self.get_list_tasks("Today")
 
     def get_projects(self) -> List[Dict[str, Any]]:
         """Retrieve all projects from Things3.
