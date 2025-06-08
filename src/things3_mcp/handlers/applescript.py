@@ -269,3 +269,43 @@ class AppleScriptHandler:
         except (json.JSONDecodeError, RuntimeError) as e:
             logger.error(f"Failed to complete selected todos: {e}")
             return {"success": False, "error": str(e)}
+
+    def rename_task(self, old_name: str, new_name: str) -> bool:
+        """Rename a task in Things3.
+        
+        Args:
+            old_name: Current name of the task
+            new_name: New name for the task
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        # Escape quotes in names to prevent AppleScript injection
+        old_name_escaped = old_name.replace('"', '\\"')
+        new_name_escaped = new_name.replace('"', '\\"')
+        
+        script = f'''
+        tell application "Things3"
+            set foundTodos to to dos where name is "{old_name_escaped}"
+            if length of foundTodos > 0 then
+                repeat with t in foundTodos
+                    set name of t to "{new_name_escaped}"
+                end repeat
+                return true
+            else
+                return false
+            end if
+        end tell
+        '''
+        
+        try:
+            result = self.run_script(script)
+            success = result.strip().lower() == "true"
+            if success:
+                logger.info(f"Successfully renamed task from '{old_name}' to '{new_name}'")
+            else:
+                logger.warning(f"Task '{old_name}' not found for renaming")
+            return success
+        except RuntimeError as e:
+            logger.error(f"Failed to rename task: {e}")
+            return False
